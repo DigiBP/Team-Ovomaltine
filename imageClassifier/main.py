@@ -17,7 +17,7 @@ def load_and_preprocess_data(dataset_dir):
         for filename in os.listdir(class_dir):
             if filename.endswith(".png"):  # Assuming image files are in JPG format
                 img = keras.preprocessing.image.load_img(
-                    os.path.join(class_dir, filename), target_size=(150, 150)
+                    os.path.join(class_dir, filename), target_size=(150,150)
                 )
                 img_array = keras.preprocessing.image.img_to_array(img)
                 data.append(img_array)
@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     # Create a CNN model
     model = Sequential([
-        layers.Conv2D(32, (3, 3), activation="relu", input_shape=(150, 150, 3)),
+        layers.Conv2D(32, (3, 3), activation="relu", input_shape=(150,150, 3)),
         layers.MaxPooling2D(2, 2),
         layers.Conv2D(64, (3, 3), activation="relu"),
         layers.MaxPooling2D(2, 2),
