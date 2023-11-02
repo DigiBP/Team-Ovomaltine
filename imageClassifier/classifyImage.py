@@ -29,7 +29,7 @@ def classifyImage(image):
     return prediction
 
 if __name__ == "__main__":
-    img = "SOB_B_A-14-22549G-40-001.png"
+    img = "imageClassifier/SOB_B_A-14-22549G-40-001.png"
     result = classifyImage(img)
     class_names = ["benign", "malignant"]
     print(class_names[int(np.round(result[0]))])
