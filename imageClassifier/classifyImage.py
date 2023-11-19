@@ -32,7 +32,7 @@ def classifyImage(image):
     return prediction
 
 if __name__ == "__main__":
-    print(tf.__version__)
+
     img = "imageClassifier/SOB_B_A-14-22549G-40-001.png"
     result = classifyImage(img)
     class_names = ["benign", "malignant"]
