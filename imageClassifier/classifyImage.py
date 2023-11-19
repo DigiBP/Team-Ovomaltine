@@ -24,11 +24,15 @@ def classifyImage(image):
     
     model = load_model('imageClassifier/breast_cancer_classifier_model.keras')
     
-    prediction = model.predict(np.expand_dims(new_image, axis=0))
+    result = model.predict(np.expand_dims(new_image, axis=0))
+    class_names = ["benign", "malignant"]
+    prediction = class_names[int(np.round(result[0]))]
+    
 
     return prediction
 
 if __name__ == "__main__":
+
     img = "imageClassifier/SOB_B_A-14-22549G-40-001.png"
     result = classifyImage(img)
     class_names = ["benign", "malignant"]
