@@ -253,7 +253,12 @@ imageClassification=object.specimen[0].ImageResult;</camunda:script>
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1gma5x8</bpmn:incoming>
+      <bpmn:outgoing>Flow_0gkc67v</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:endEvent id="Event_00czrl8">
+      <bpmn:incoming>Flow_0gkc67v</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0gkc67v" sourceRef="Activity_0epi7ar" targetRef="Event_00czrl8" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="my_part">
@@ -323,6 +328,9 @@ imageClassification=object.specimen[0].ImageResult;</camunda:script>
       <bpmndi:BPMNShape id="Activity_1ockaow_di" bpmnElement="Activity_0epi7ar">
         <dc:Bounds x="2130" y="160" width="100" height="80" />
         <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_00czrl8_di" bpmnElement="Event_00czrl8">
+        <dc:Bounds x="2292" y="182" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0ye6mqp_di" bpmnElement="Activity_0ye6mqp" isExpanded="true">
         <dc:Bounds x="1100" y="276" width="470" height="128" />
@@ -437,6 +445,10 @@ imageClassification=object.specimen[0].ImageResult;</camunda:script>
       <bpmndi:BPMNEdge id="Flow_1gma5x8_di" bpmnElement="Flow_1gma5x8">
         <di:waypoint x="2070" y="200" />
         <di:waypoint x="2130" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0gkc67v_di" bpmnElement="Flow_0gkc67v">
+        <di:waypoint x="2230" y="200" />
+        <di:waypoint x="2292" y="200" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

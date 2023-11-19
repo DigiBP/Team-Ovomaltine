@@ -1,0 +1,27 @@
+﻿Specimen_ID,Procedure,Specimen Laterality,Tumor Site,Histologic Type,Histologic Grade : Glandular (Acinar) / Tubular Differentiation score,Histologic Grade : Nuclear Pleomorphism score,Histologic Grade : Mitotic Rate score,Overall Grade ,Tumor Size,Diagnosis
+1,Excision,Right,Upper outer quadrant,No residual invasive carcinoma,Not applicable,Not applicable,Not applicable,Score cannot be determined ,No residual invasive carcinoma ,Malignant
+2,Total mastectomy,Left,Lower outer quadrant,Invasive carcinoma of no special type (ductal),1,1,1,1,0.3 mm,Malignant
+3,Total mastectomy,Left,Upper inner quadrant,Micro-invasive carcinoma,2,2,2,1,1 cm,Malignant
+4,Total mastectomy,Left,Lower inner quadrant,Invasive lobular carcinoma,3,3,3,3,0.5 mm,Malignant
+5,Total mastectomy,Left,Central,Invasive carcinoma with mixed ductal and lobular features,Only microinvasion present (not graded),Only microinvasion present (not graded),Only microinvasion present (not graded),Only microinvasion present (not graded),Microinvasion only (less than or equal to 1 mm),Malignant
+6,Total mastectomy,Right,Nipple,Tubular carcinoma ,Score cannot be determined ,Score cannot be determined ,Score cannot be determined ,Score cannot be determined ,3 cm,Malignant
+7,Total mastectomy,Left,Upper inner quadrant,Invasive cribriform carcinoma,2,1,1,1,2 cm,Malignant
+8,Total mastectomy,Right,Lower outer quadrant,Mucinous carcinoma,3,1,3,2,1cm,Malignant
+9,Total mastectomy,Left,Central,Invasive micropapillary carcinoma,1,1,3,1,1 cm,Malignant
+10,Total mastectomy,Right,Upper inner quadrant,Apocrine adenocarcinoma,1,2,1,1,0.8 mm,Malignant
+11,Total mastectomy,Right,Upper inner quadrant,Metaplastic carcinoma,2,3,3,3,5 cm,Malignant
+12,Excision,Right,Lower outer quadrant,Encapsulated papillary carcinoma with invasion,3,2,3,3,8 cm,Malignant
+13,Total mastectomy,Left,Central,Solid papillary carcinoma with invasion,2,3,1,2,2.8 cm,Malignant
+14,Total mastectomy,Left,Lower outer quadrant,Intraductal papillary adenocarcinoma with invasion,3,1,3,2,3.2 cm,Malignant
+15,Total mastectomy,Left,Lower outer quadrant,Adenoid cystic carcinoma,1,2,2,1,0.5 mm,Malignant
+16,Total mastectomy,Right,Lower outer quadrant,Neuroendocrine tumor,2,3,2,2,1.3 cm,Malignant
+17,Total mastectomy,Right,Nipple,Neuroendocrine carcinoma,3,1,2,2,1.8 cm,Malignant
+18,Total mastectomy,Left,Upper inner quadrant,"Invasive carcinoma, type cannot be determined ",2,3,3,3,6.3 cm,Malignant
+19,Excision,Right,Lower outer quadrant,Fibroadenoma,,,,,2 cm,Benign
+20,Excision,Right,Lower outer quadrant,Fibroadenoma,,,,,1cm,Benign
+21,Excision,Left,Lower outer quadrant,Fibroadenoma,,,,,1 cm,Benign
+22,Excision,Left,Nipple,Fibroadenoma,,,,,1.2 cm,Benign
+23,Excision,Left,Upper inner quadrant,Fibroadenoma,,,,,0.8 mm,Benign
+24,Excision,Right,Lower outer quadrant,Fibroadenoma,,,,,2 cm,Benign
+25,Excision,Right,Lower outer quadrant,Fibroadenoma,,,,,2.2 cm,Benign
+26,Excision,Left,Lower outer quadrant,Fibroadenoma,,,,,,Benign
