@@ -343,6 +343,10 @@ batchCheck=object.check;</camunda:script>
     <bpmn:sequenceFlow id="Flow_0w9mhao" name="noteligible" sourceRef="Gateway_0etsann" targetRef="Activity_1wdm3kp">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${eligibility_1 == false}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="SpecimenJourney">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="152" y="442" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="140" y="485" width="61" height="27" />
