@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1qi09r4" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.15.2" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.19.0">
+  <bpmn:process id="my_part" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="StartEvent_1" name="Specimen is received">
+      <bpmn:outgoing>Flow_03j9e10</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_03j9e10" sourceRef="StartEvent_1" targetRef="Activity_0fea3fo" />
+    <bpmn:sequenceFlow id="Flow_11mf2tn" sourceRef="Activity_0fea3fo" targetRef="Activity_0mivpnv" />
+    <bpmn:endEvent id="Event_1a29kx8" name="Specimen is sent">
+      <bpmn:incoming>Flow_1t7h0jd</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="Activity_0mivpnv" name="Assess eligibility of specimen">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="eligibility" label="Is specimen eligible" type="string" defaultValue="noteligible" />
+          <camunda:formField id="Patientid" label="Patient ID" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="PatientName" label="Patient Name" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="SpecimenId" label="Specimen Id" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="Doctorname" label="Doctor Name" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_11mf2tn</bpmn:incoming>
+      <bpmn:outgoing>Flow_1nu8e2v</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_0fea3fo" name="Register the specimen">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="Patientid" label="Patient ID" type="string" />
+          <camunda:formField id="PatientName" label="Patient Name" type="string" />
+          <camunda:formField id="SpecimenId" label="Specimen Id" type="string" />
+          <camunda:formField id="Doctorname" label="Doctor Name" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_03j9e10</bpmn:incoming>
+      <bpmn:outgoing>Flow_11mf2tn</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1nu8e2v" sourceRef="Activity_0mivpnv" targetRef="Activity_1mhtnq5" />
+    <bpmn:exclusiveGateway id="Gateway_0etsann" name="elibible">
+      <bpmn:incoming>Flow_11160e0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1t7h0jd</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0w9mhao</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1t7h0jd" name="eligible" sourceRef="Gateway_0etsann" targetRef="Event_1a29kx8">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${eligibility=="His"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0w9mhao" name="noteligible" sourceRef="Gateway_0etsann" targetRef="Event_1rjik1m">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${eligibility == "noteligible"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="Event_1rjik1m" name="specimen saved">
+      <bpmn:incoming>Flow_0w9mhao</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_11160e0" sourceRef="Activity_1mhtnq5" targetRef="Gateway_0etsann" />
+    <bpmn:serviceTask id="Activity_1mhtnq5" name="Update db">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">https://83b8a426-fb76-4146-bdcd-aebddc2d0532.deepnoteproject.com</camunda:inputParameter>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1nu8e2v</bpmn:incoming>
+      <bpmn:outgoing>Flow_11160e0</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="my_part">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="259" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="140" y="302" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0xdvjtq_di" bpmnElement="Activity_0mivpnv">
+        <dc:Bounds x="450" y="220" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_007rn8f_di" bpmnElement="Activity_0fea3fo">
+        <dc:Bounds x="270" y="230" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1rjik1m_di" bpmnElement="Event_1rjik1m">
+        <dc:Bounds x="882" y="92" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="860" y="135" width="80" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0etsann_di" bpmnElement="Gateway_0etsann" isMarkerVisible="true">
+        <dc:Bounds x="715" y="235" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="723" y="292" width="35" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1a29kx8_di" bpmnElement="Event_1a29kx8">
+        <dc:Bounds x="932" y="232" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="908" y="275" width="85" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pv83gs_di" bpmnElement="Activity_1mhtnq5">
+        <dc:Bounds x="580" y="220" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_03j9e10_di" bpmnElement="Flow_03j9e10">
+        <di:waypoint x="188" y="277" />
+        <di:waypoint x="243" y="277" />
+        <di:waypoint x="243" y="270" />
+        <di:waypoint x="270" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11mf2tn_di" bpmnElement="Flow_11mf2tn">
+        <di:waypoint x="370" y="270" />
+        <di:waypoint x="400" y="270" />
+        <di:waypoint x="400" y="260" />
+        <di:waypoint x="450" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1nu8e2v_di" bpmnElement="Flow_1nu8e2v">
+        <di:waypoint x="550" y="260" />
+        <di:waypoint x="580" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1t7h0jd_di" bpmnElement="Flow_1t7h0jd">
+        <di:waypoint x="765" y="260" />
+        <di:waypoint x="814" y="260" />
+        <di:waypoint x="814" y="250" />
+        <di:waypoint x="932" y="250" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="808" y="242" width="35" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0w9mhao_di" bpmnElement="Flow_0w9mhao">
+        <di:waypoint x="740" y="235" />
+        <di:waypoint x="740" y="200" />
+        <di:waypoint x="710" y="200" />
+        <di:waypoint x="710" y="120" />
+        <di:waypoint x="820" y="120" />
+        <di:waypoint x="820" y="110" />
+        <di:waypoint x="882" y="110" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="715" y="193" width="50" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11160e0_di" bpmnElement="Flow_11160e0">
+        <di:waypoint x="680" y="260" />
+        <di:waypoint x="715" y="260" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
