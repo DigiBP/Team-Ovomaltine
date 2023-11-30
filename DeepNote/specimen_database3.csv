@@ -1,3 +1,1 @@
 Specimen_ID,Batch_ID,Patient_ID,PatientName,DoctorName,Eligibility_1,ArtidisMeasurement,Eligibility_2,ImageResult,HistopathologyDescription
-1,0,Max,1,,,,
-1,5,23,dede,eed,1,malignant,True,benign,tojestprobaczydyiala

@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1qi09r4" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.9.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.19.0">
+  <bpmn:process id="SpecimenJourney_experiment" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="StartEvent_1" name="Specimen is received">
+      <bpmn:outgoing>Flow_0ean18o</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_1l3qc1o" name="Generate a report">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">https://69eb62be-3c1b-49e2-ac1f-d13d4e0bc6d3.deepnoteproject.com/generateReport/${batch_ID}</camunda:inputParameter>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:outputParameter name="reportName">
+              <camunda:script scriptFormat="JavaScript">object=JSON.parse(response);
+reportName=object.reportName;</camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1v3wtpt</bpmn:incoming>
+      <bpmn:outgoing>Flow_1voug4a</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1voug4a" sourceRef="Activity_1l3qc1o" targetRef="Activity_1eceksy" />
+    <bpmn:serviceTask id="Activity_1eceksy" name="Send an email with the report to the Doctor">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="url">https://69eb62be-3c1b-49e2-ac1f-d13d4e0bc6d3.deepnoteproject.com/sendReport/${reportName}</camunda:inputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1voug4a</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ycujh0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_073zsza">
+      <bpmn:incoming>Flow_1ycujh0</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1ycujh0" sourceRef="Activity_1eceksy" targetRef="Event_073zsza" />
+    <bpmn:sequenceFlow id="Flow_0ean18o" sourceRef="StartEvent_1" targetRef="Activity_1ouk6yi" />
+    <bpmn:userTask id="Activity_1ouk6yi" name="Register the batch">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="batch_ID" label="Batch ID" type="long" />
+          <camunda:formField id="numberSpecimen" label="Number of Specimen in the Batch" type="long" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0ean18o</bpmn:incoming>
+      <bpmn:incoming>Flow_1lz3jek</bpmn:incoming>
+      <bpmn:outgoing>Flow_0b3ks6u</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0b3ks6u" sourceRef="Activity_1ouk6yi" targetRef="Activity_08h9elz" />
+    <bpmn:serviceTask id="Activity_08h9elz" name="Update batch_database">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">https://69eb62be-3c1b-49e2-ac1f-d13d4e0bc6d3.deepnoteproject.com/addbatch</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Content-Type">application/json</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="payload">
+              <camunda:script scriptFormat="JavaScript">out= JSON.stringify({
+"Batch_ID":batch_ID,
+"NumberSpecimen":numberSpecimen});</camunda:script>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="status_code">
+              <camunda:script scriptFormat="JavaScript">object=JSON.parse(response); status_code=object.status_code;</camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0b3ks6u</bpmn:incoming>
+      <bpmn:outgoing>Flow_03czt5m</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_0ep6vgj" name="Check_Batch">
+      <bpmn:incoming>Flow_03czt5m</bpmn:incoming>
+      <bpmn:outgoing>Flow_1n2blke</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0ra769j</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_03czt5m" sourceRef="Activity_08h9elz" targetRef="Gateway_0ep6vgj" />
+    <bpmn:sequenceFlow id="Flow_1n2blke" name="Batch_ID_accepted" sourceRef="Gateway_0ep6vgj" targetRef="Activity_0k1k01q">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${status_code == "201"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="Activity_0w5w2av" name="Redirect_toRegister">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="specimen_ID" label="This specimen already exists.Please register with correct Specimen_ID" type="long">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0ra769j</bpmn:incoming>
+      <bpmn:outgoing>Flow_1lz3jek</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0ra769j" name="Batch_ID_exists" sourceRef="Gateway_0ep6vgj" targetRef="Activity_0w5w2av">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${status_code == "400"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1lz3jek" sourceRef="Activity_0w5w2av" targetRef="Activity_1ouk6yi" />
+    <bpmn:subProcess id="Activity_0k1k01q">
+      <bpmn:incoming>Flow_1n2blke</bpmn:incoming>
+      <bpmn:outgoing>Flow_1v3wtpt</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics isSequential="true">
+        <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">${numberSpecimen}</bpmn:loopCardinality>
+      </bpmn:multiInstanceLoopCharacteristics>
+      <bpmn:subProcess id="Activity_0ye6mqp">
+        <bpmn:incoming>Flow_16u2svz</bpmn:incoming>
+        <bpmn:outgoing>Flow_1puxpmn</bpmn:outgoing>
+        <bpmn:endEvent id="Event_1n8naiv">
+          <bpmn:incoming>Flow_1fp20h6</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:serviceTask id="Activity_01sravz" name="Artidis Measurement">
+          <bpmn:extensionElements>
+            <camunda:connector>
+              <camunda:inputOutput>
+                <camunda:inputParameter name="url">https://69eb62be-3c1b-49e2-ac1f-d13d4e0bc6d3.deepnoteproject.com/ArtidisMeasurement/${specimen_ID}</camunda:inputParameter>
+                <camunda:inputParameter name="method">POST</camunda:inputParameter>
+              </camunda:inputOutput>
+              <camunda:connectorId>http-connector</camunda:connectorId>
+            </camunda:connector>
+          </bpmn:extensionElements>
+          <bpmn:incoming>Flow_0xscu35</bpmn:incoming>
+          <bpmn:outgoing>Flow_1fp20h6</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:sequenceFlow id="Flow_1fp20h6" sourceRef="Activity_01sravz" targetRef="Event_1n8naiv" />
+        <bpmn:userTask id="Activity_14tmkn7" name="Prepare measurement">
+          <bpmn:extensionElements>
+            <camunda:formData>
+              <camunda:formField id="confirmMeasurement" label="Confirm Measurement" type="boolean" />
+            </camunda:formData>
+          </bpmn:extensionElements>
+          <bpmn:incoming>Flow_1bmdgjs</bpmn:incoming>
+          <bpmn:outgoing>Flow_0xscu35</bpmn:outgoing>
+        </bpmn:userTask>
+        <bpmn:sequenceFlow id="Flow_0xscu35" sourceRef="Activity_14tmkn7" targetRef="Activity_01sravz" />
+        <bpmn:startEvent id="Event_0it7rnl">
+          <bpmn:outgoing>Flow_1bmdgjs</bpmn:outgoing>
+        </bpmn:startEvent>
+        <bpmn:sequenceFlow id="Flow_1bmdgjs" sourceRef="Event_0it7rnl" targetRef="Activity_14tmkn7" />
+      </bpmn:subProcess>
+      <bpmn:boundaryEvent id="Event_0ty3wsq" attachedToRef="Activity_0ye6mqp">
+        <bpmn:timerEventDefinition id="TimerEventDefinition_0cjw3ll">
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P14D</bpmn:timeDuration>
+        </bpmn:timerEventDefinition>
+      </bpmn:boundaryEvent>
+      <bpmn:endEvent id="Event_1skgn8x">
+        <bpmn:incoming>Flow_1dwbtfb</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:endEvent id="Event_0d97bvm">
+        <bpmn:incoming>Flow_1xpy2ie</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:endEvent id="Event_1pxxjfn">
+        <bpmn:incoming>Flow_1kmva39</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:startEvent id="Event_1cb57yu">
+        <bpmn:outgoing>Flow_0as6oao</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:userTask id="Activity_0snfp3r" name="Redirect_toRegister">
+        <bpmn:extensionElements>
+          <camunda:formData>
+            <camunda:formField id="specimen_ID" label="This specimen already exists.Please register with correct Specimen_ID" type="long">
+              <camunda:validation>
+                <camunda:constraint name="readonly" />
+              </camunda:validation>
+            </camunda:formField>
+          </camunda:formData>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_1axibeu</bpmn:incoming>
+        <bpmn:outgoing>Flow_18sm9no</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:exclusiveGateway id="Gateway_1bfblat" name="Check_Specimen">
+        <bpmn:incoming>Flow_11160e0</bpmn:incoming>
+        <bpmn:outgoing>Flow_1axibeu</bpmn:outgoing>
+        <bpmn:outgoing>Flow_064hd2j</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_1axibeu" name="Specimen_ID_exists" sourceRef="Gateway_1bfblat" targetRef="Activity_0snfp3r">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${status_code == "400"}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:serviceTask id="Activity_1nxb8gc" name="Update DB">
+        <bpmn:extensionElements>
+          <camunda:connector>
+            <camunda:inputOutput>
+              <camunda:inputParameter name="url">https://69eb62be-3c1b-49e2-ac1f-d13d4e0bc6d3.deepnoteproject.com/histopathologydescription</camunda:inputParameter>
+              <camunda:inputParameter name="method">POST</camunda:inputParameter>
+              <camunda:inputParameter name="payload">
+                <camunda:script scriptFormat="JavaScript">out = JSON.stringify(
+{
+"Specimen_ID": specimen_ID,
+"HistopathologyDescription": histopathologyDescription
+}
+);</camunda:script>
+              </camunda:inputParameter>
+              <camunda:inputParameter name="headers">
+                <camunda:map>
+                  <camunda:entry key="Content-Type">application/json</camunda:entry>
+                </camunda:map>
+              </camunda:inputParameter>
+            </camunda:inputOutput>
+            <camunda:connectorId>http-connector</camunda:connectorId>
+          </camunda:connector>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0srf1a9</bpmn:incoming>
+        <bpmn:outgoing>Flow_1kmva39</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_1kmva39" sourceRef="Activity_1nxb8gc" targetRef="Event_1pxxjfn" />
+      <bpmn:userTask id="Activity_0epi7ar" name="Display the result and prompt for the description">
+        <bpmn:extensionElements>
+          <camunda:formData>
+            <camunda:formField id="imageClassification" label="Specimen Classified as:" type="string">
+              <camunda:validation>
+                <camunda:constraint name="readonly" config="true" />
+              </camunda:validation>
+            </camunda:formField>
+            <camunda:formField id="histopathologyDescription" label="Describe Histopathology Slide" type="string">
+              <camunda:properties />
+            </camunda:formField>
+          </camunda:formData>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_1gma5x8</bpmn:incoming>
+        <bpmn:outgoing>Flow_0srf1a9</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:sequenceFlow id="Flow_0srf1a9" sourceRef="Activity_0epi7ar" targetRef="Activity_1nxb8gc" />
+      <bpmn:serviceTask id="Activity_12yzb8h" name="Analyze the image">
+        <bpmn:extensionElements>
+          <camunda:connector>
+            <camunda:inputOutput>
+              <camunda:inputParameter name="method">POST</camunda:inputParameter>
+              <camunda:inputParameter name="url">https://69eb62be-3c1b-49e2-ac1f-d13d4e0bc6d3.deepnoteproject.com/classifyImage/${specimen_ID}</camunda:inputParameter>
+              <camunda:outputParameter name="imageClassification">
+                <camunda:script scriptFormat="JavaScript">object=JSON.parse(response);
+imageClassification=object.specimen[0].ImageResult;</camunda:script>
+              </camunda:outputParameter>
+            </camunda:inputOutput>
+            <camunda:connectorId>http-connector</camunda:connectorId>
+          </camunda:connector>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0me6j1q</bpmn:incoming>
+        <bpmn:outgoing>Flow_1gma5x8</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_1gma5x8" sourceRef="Activity_12yzb8h" targetRef="Activity_0epi7ar" />
+      <bpmn:userTask id="Activity_1cutycw" name="Prepare Histopathology glass slides">
+        <bpmn:extensionElements>
+          <camunda:formData>
+            <camunda:formField id="confirmHistopathology" label="Confirm the praparation of the histopathology slides" type="boolean" defaultValue="True" />
+          </camunda:formData>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0kgirie</bpmn:incoming>
+        <bpmn:incoming>Flow_11f293k</bpmn:incoming>
+        <bpmn:outgoing>Flow_0me6j1q</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:sequenceFlow id="Flow_0me6j1q" sourceRef="Activity_1cutycw" targetRef="Activity_12yzb8h" />
+      <bpmn:exclusiveGateway id="Gateway_0eytvc4" name="Is specimen eligible? (2)">
+        <bpmn:incoming>Flow_108vxgj</bpmn:incoming>
+        <bpmn:outgoing>Flow_1dwbtfb</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0kgirie</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_1dwbtfb" name="noteligible" sourceRef="Gateway_0eytvc4" targetRef="Event_1skgn8x">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${eligibility_2 == false}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_0kgirie" name="eligible" sourceRef="Gateway_0eytvc4" targetRef="Activity_1cutycw">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${eligibility_2 == true}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_1puxpmn" sourceRef="Activity_0ye6mqp" targetRef="Activity_0owjw2r" />
+      <bpmn:serviceTask id="Activity_1a8yh5a" name="Update DB">
+        <bpmn:extensionElements>
+          <camunda:connector>
+            <camunda:inputOutput>
+              <camunda:inputParameter name="method">POST</camunda:inputParameter>
+              <camunda:inputParameter name="url">https://69eb62be-3c1b-49e2-ac1f-d13d4e0bc6d3.deepnoteproject.com/addeligibility2</camunda:inputParameter>
+              <camunda:inputParameter name="payload">
+                <camunda:script scriptFormat="JavaScript">out = JSON.stringify(
+{  
+    "Specimen_ID": specimen_ID,
+    "Eligibility_2": eligibility_2
+}
+);</camunda:script>
+              </camunda:inputParameter>
+              <camunda:inputParameter name="headers">
+                <camunda:map>
+                  <camunda:entry key="Content-Type">application/json</camunda:entry>
+                </camunda:map>
+              </camunda:inputParameter>
+            </camunda:inputOutput>
+            <camunda:connectorId>http-connector</camunda:connectorId>
+          </camunda:connector>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0czkt3k</bpmn:incoming>
+        <bpmn:outgoing>Flow_108vxgj</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_108vxgj" sourceRef="Activity_1a8yh5a" targetRef="Gateway_0eytvc4" />
+      <bpmn:userTask id="Activity_0owjw2r" name="Assess Eligibility 2">
+        <bpmn:extensionElements>
+          <camunda:formData>
+            <camunda:formField id="eligibility_2" label="Is the specimen eligible for Histopathology Analysis?" type="boolean" defaultValue="True" />
+          </camunda:formData>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_1puxpmn</bpmn:incoming>
+        <bpmn:outgoing>Flow_0czkt3k</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:sequenceFlow id="Flow_0czkt3k" sourceRef="Activity_0owjw2r" targetRef="Activity_1a8yh5a" />
+      <bpmn:userTask id="Activity_0chmq9q" name="Send specimen">
+        <bpmn:extensionElements>
+          <camunda:formData>
+            <camunda:formField id="sendSpecimen" label="Where should the specimen be sent?" type="enum" defaultValue="Artidis">
+              <camunda:value id="Artidis" name="Artidis" />
+              <camunda:value id="Histopathology" name="Histopathology" />
+            </camunda:formField>
+          </camunda:formData>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0icmx6g</bpmn:incoming>
+        <bpmn:outgoing>Flow_0gw5jrj</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:exclusiveGateway id="Gateway_19hgy37" name="Where do you want to send the sample">
+        <bpmn:incoming>Flow_0gw5jrj</bpmn:incoming>
+        <bpmn:outgoing>Flow_11f293k</bpmn:outgoing>
+        <bpmn:outgoing>Flow_16u2svz</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_11f293k" name="Histopathology" sourceRef="Gateway_19hgy37" targetRef="Activity_1cutycw">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${sendSpecimen== "Histopathology"}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_16u2svz" name="Artidis" sourceRef="Gateway_19hgy37" targetRef="Activity_0ye6mqp">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${sendSpecimen== "Artidis"}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_0gw5jrj" sourceRef="Activity_0chmq9q" targetRef="Gateway_19hgy37" />
+      <bpmn:serviceTask id="Activity_1mhtnq5" name="Update db">
+        <bpmn:extensionElements>
+          <camunda:connector>
+            <camunda:inputOutput>
+              <camunda:inputParameter name="url">https://69eb62be-3c1b-49e2-ac1f-d13d4e0bc6d3.deepnoteproject.com/addspecimen</camunda:inputParameter>
+              <camunda:inputParameter name="method">POST</camunda:inputParameter>
+              <camunda:inputParameter name="payload">
+                <camunda:script scriptFormat="JavaScript">out= JSON.stringify({
+"Specimen_ID":specimen_ID,
+"Batch_ID":batch_ID,
+"Patient_ID":patient_ID,
+"PatientName":patientName,
+"DoctorName":doctorName,
+"Eligibility_1" :eligibility_1});</camunda:script>
+              </camunda:inputParameter>
+              <camunda:inputParameter name="headers">
+                <camunda:map>
+                  <camunda:entry key="Content-Type">application/json</camunda:entry>
+                </camunda:map>
+              </camunda:inputParameter>
+              <camunda:outputParameter name="status_code">
+                <camunda:script scriptFormat="JavaScript">object=JSON.parse(response); status_code=object.status_code;</camunda:script>
+              </camunda:outputParameter>
+            </camunda:inputOutput>
+            <camunda:connectorId>http-connector</camunda:connectorId>
+          </camunda:connector>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_11mf2tn</bpmn:incoming>
+        <bpmn:outgoing>Flow_11160e0</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_11160e0" sourceRef="Activity_1mhtnq5" targetRef="Gateway_1bfblat" />
+      <bpmn:exclusiveGateway id="Gateway_0etsann" name="Is the specimen eligible for the further analysis?">
+        <bpmn:incoming>Flow_064hd2j</bpmn:incoming>
+        <bpmn:outgoing>Flow_1xpy2ie</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0icmx6g</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_1xpy2ie" name="noteligible" sourceRef="Gateway_0etsann" targetRef="Event_0d97bvm">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${eligibility_1 == false}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_0icmx6g" name="eligible" sourceRef="Gateway_0etsann" targetRef="Activity_0chmq9q">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${eligibility_1 == true}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_064hd2j" name="Specimen_ID_accepted" sourceRef="Gateway_1bfblat" targetRef="Gateway_0etsann">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${status_code == "201"}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:userTask id="Activity_0fea3fo" name="Register the specimen">
+        <bpmn:extensionElements>
+          <camunda:formData>
+            <camunda:formField id="patient_ID" label="Patient ID" type="string">
+              <camunda:properties />
+              <camunda:validation />
+            </camunda:formField>
+            <camunda:formField id="patientName" label="Patient Name" type="string" />
+            <camunda:formField id="specimen_ID" label="Specimen ID" type="string" />
+            <camunda:formField id="doctorName" label="Doctor Name" type="string" />
+            <camunda:formField id="batch_ID" label="Batch ID is" type="long">
+              <camunda:validation>
+                <camunda:constraint name="readonly" />
+              </camunda:validation>
+            </camunda:formField>
+            <camunda:formField id="eligibility_1" label="Is the specimen eligible for the analysis?" type="boolean" />
+          </camunda:formData>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="Input_21b6odt" />
+          </camunda:inputOutput>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0as6oao</bpmn:incoming>
+        <bpmn:incoming>Flow_18sm9no</bpmn:incoming>
+        <bpmn:outgoing>Flow_11mf2tn</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:sequenceFlow id="Flow_11mf2tn" sourceRef="Activity_0fea3fo" targetRef="Activity_1mhtnq5" />
+      <bpmn:sequenceFlow id="Flow_0as6oao" sourceRef="Event_1cb57yu" targetRef="Activity_0fea3fo" />
+      <bpmn:sequenceFlow id="Flow_18sm9no" sourceRef="Activity_0snfp3r" targetRef="Activity_0fea3fo" />
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="Flow_1v3wtpt" sourceRef="Activity_0k1k01q" targetRef="Activity_1l3qc1o" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="SpecimenJourney_experiment">
+      <bpmndi:BPMNShape id="Activity_03fgbbt_di" bpmnElement="Activity_1l3qc1o">
+        <dc:Bounds x="3650" y="370" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_12ienxo_di" bpmnElement="Activity_1eceksy">
+        <dc:Bounds x="3820" y="370" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_073zsza_di" bpmnElement="Event_073zsza">
+        <dc:Bounds x="3992" y="392" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="172" y="392" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="160" y="435" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1sy4h0s_di" bpmnElement="Activity_1ouk6yi">
+        <dc:Bounds x="250" y="370" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1m9iv0p_di" bpmnElement="Activity_08h9elz">
+        <dc:Bounds x="420" y="370" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0ep6vgj_di" bpmnElement="Gateway_0ep6vgj" isMarkerVisible="true">
+        <dc:Bounds x="595" y="385" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="587" y="355" width="66" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1ltbijq" bpmnElement="Activity_0w5w2av">
+        <dc:Bounds x="330" y="560" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0k1k01q_di" bpmnElement="Activity_0k1k01q" isExpanded="true">
+        <dc:Bounds x="880" y="80" width="2650" height="640" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_007rn8f_di" bpmnElement="Activity_0fea3fo">
+        <dc:Bounds x="980" y="336" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0etsann_di" bpmnElement="Gateway_0etsann" isMarkerVisible="true">
+        <dc:Bounds x="1515" y="351" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1499" y="301" width="81" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pv83gs_di" bpmnElement="Activity_1mhtnq5">
+        <dc:Bounds x="1170" y="336" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_19hgy37_di" bpmnElement="Gateway_19hgy37" isMarkerVisible="true">
+        <dc:Bounds x="1815" y="351" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1799" y="411" width="81" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0qfp0gk_di" bpmnElement="Activity_0chmq9q">
+        <dc:Bounds x="1640" y="336" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0aei0zz" bpmnElement="Activity_0owjw2r">
+        <dc:Bounds x="2420" y="336" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_172tiy3" bpmnElement="Activity_1a8yh5a">
+        <dc:Bounds x="2570" y="336" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0eytvc4_di" bpmnElement="Gateway_0eytvc4" isMarkerVisible="true">
+        <dc:Bounds x="2725" y="351" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2720" y="411" width="59" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1r54dcy_di" bpmnElement="Activity_1cutycw">
+        <dc:Bounds x="2830" y="336" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0e0fge3_di" bpmnElement="Activity_12yzb8h">
+        <dc:Bounds x="2990" y="336" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ockaow_di" bpmnElement="Activity_0epi7ar">
+        <dc:Bounds x="3150" y="336" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1u37gdr_di" bpmnElement="Activity_1nxb8gc">
+        <dc:Bounds x="3310" y="336" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1bfblat_di" bpmnElement="Gateway_1bfblat" isMarkerVisible="true">
+        <dc:Bounds x="1385" y="351" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1366" y="327" width="87" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1t0fm5m_di" bpmnElement="Activity_0snfp3r">
+        <dc:Bounds x="1070" y="606" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1cb57yu_di" bpmnElement="Event_1cb57yu">
+        <dc:Bounds x="902" y="358" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1pxxjfn_di" bpmnElement="Event_1pxxjfn">
+        <dc:Bounds x="3472" y="358" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0d97bvm_di" bpmnElement="Event_0d97bvm">
+        <dc:Bounds x="1522" y="502" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1skgn8x_di" bpmnElement="Event_1skgn8x">
+        <dc:Bounds x="2732" y="202" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ye6mqp_di" bpmnElement="Activity_0ye6mqp" isExpanded="true">
+        <dc:Bounds x="1900" y="312" width="470" height="128" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0it7rnl_di" bpmnElement="Event_0it7rnl">
+        <dc:Bounds x="1932" y="362" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1jk8yoq_di" bpmnElement="Activity_14tmkn7">
+        <dc:Bounds x="2000" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1vuqqiy" bpmnElement="Activity_01sravz">
+        <dc:Bounds x="2150" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1n8naiv_di" bpmnElement="Event_1n8naiv">
+        <dc:Bounds x="2302" y="362" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1bmdgjs_di" bpmnElement="Flow_1bmdgjs">
+        <di:waypoint x="1968" y="380" />
+        <di:waypoint x="2000" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xscu35_di" bpmnElement="Flow_0xscu35">
+        <di:waypoint x="2100" y="380" />
+        <di:waypoint x="2150" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fp20h6_di" bpmnElement="Flow_1fp20h6">
+        <di:waypoint x="2250" y="380" />
+        <di:waypoint x="2302" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0bthohy_di" bpmnElement="Event_0ty3wsq">
+        <dc:Bounds x="2302" y="422" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_18sm9no_di" bpmnElement="Flow_18sm9no">
+        <di:waypoint x="1070" y="647" />
+        <di:waypoint x="1030" y="647" />
+        <di:waypoint x="1030" y="416" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0as6oao_di" bpmnElement="Flow_0as6oao">
+        <di:waypoint x="938" y="376" />
+        <di:waypoint x="980" y="376" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11mf2tn_di" bpmnElement="Flow_11mf2tn">
+        <di:waypoint x="1080" y="376" />
+        <di:waypoint x="1170" y="376" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_064hd2j_di" bpmnElement="Flow_064hd2j">
+        <di:waypoint x="1435" y="376" />
+        <di:waypoint x="1515" y="376" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1433" y="358" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0icmx6g_di" bpmnElement="Flow_0icmx6g">
+        <di:waypoint x="1565" y="376" />
+        <di:waypoint x="1640" y="376" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1585" y="358" width="35" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1xpy2ie_di" bpmnElement="Flow_1xpy2ie">
+        <di:waypoint x="1540" y="401" />
+        <di:waypoint x="1540" y="502" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1530" y="449" width="51" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11160e0_di" bpmnElement="Flow_11160e0">
+        <di:waypoint x="1270" y="376" />
+        <di:waypoint x="1385" y="376" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0gw5jrj_di" bpmnElement="Flow_0gw5jrj">
+        <di:waypoint x="1740" y="376" />
+        <di:waypoint x="1815" y="376" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16u2svz_di" bpmnElement="Flow_16u2svz">
+        <di:waypoint x="1865" y="376" />
+        <di:waypoint x="1900" y="376" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1867" y="384" width="31" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11f293k_di" bpmnElement="Flow_11f293k">
+        <di:waypoint x="1840" y="406" />
+        <di:waypoint x="1840" y="556" />
+        <di:waypoint x="2880" y="556" />
+        <di:waypoint x="2880" y="416" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2324" y="538" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1puxpmn_di" bpmnElement="Flow_1puxpmn">
+        <di:waypoint x="2370" y="376" />
+        <di:waypoint x="2420" y="376" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_1hrwats" bpmnElement="Flow_0czkt3k">
+        <di:waypoint x="2520" y="376" />
+        <di:waypoint x="2570" y="376" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_108vxgj_di" bpmnElement="Flow_108vxgj">
+        <di:waypoint x="2670" y="376" />
+        <di:waypoint x="2725" y="376" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kgirie_di" bpmnElement="Flow_0kgirie">
+        <di:waypoint x="2775" y="376" />
+        <di:waypoint x="2830" y="376" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2785" y="358" width="35" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dwbtfb_di" bpmnElement="Flow_1dwbtfb">
+        <di:waypoint x="2750" y="351" />
+        <di:waypoint x="2750" y="238" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2740" y="292" width="51" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0me6j1q_di" bpmnElement="Flow_0me6j1q">
+        <di:waypoint x="2930" y="376" />
+        <di:waypoint x="2990" y="376" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gma5x8_di" bpmnElement="Flow_1gma5x8">
+        <di:waypoint x="3090" y="376" />
+        <di:waypoint x="3150" y="376" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0srf1a9_di" bpmnElement="Flow_0srf1a9">
+        <di:waypoint x="3250" y="376" />
+        <di:waypoint x="3310" y="376" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kmva39_di" bpmnElement="Flow_1kmva39">
+        <di:waypoint x="3410" y="376" />
+        <di:waypoint x="3472" y="376" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1axibeu_di" bpmnElement="Flow_1axibeu">
+        <di:waypoint x="1410" y="401" />
+        <di:waypoint x="1410" y="646" />
+        <di:waypoint x="1170" y="646" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1210" y="634" width="87" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1v3wtpt_di" bpmnElement="Flow_1v3wtpt">
+        <di:waypoint x="3530" y="410" />
+        <di:waypoint x="3650" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1voug4a_di" bpmnElement="Flow_1voug4a">
+        <di:waypoint x="3750" y="410" />
+        <di:waypoint x="3820" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ycujh0_di" bpmnElement="Flow_1ycujh0">
+        <di:waypoint x="3920" y="410" />
+        <di:waypoint x="3992" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ean18o_di" bpmnElement="Flow_0ean18o">
+        <di:waypoint x="208" y="410" />
+        <di:waypoint x="250" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1lz3jek_di" bpmnElement="Flow_1lz3jek">
+        <di:waypoint x="330" y="600" />
+        <di:waypoint x="300" y="600" />
+        <di:waypoint x="300" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0b3ks6u_di" bpmnElement="Flow_0b3ks6u">
+        <di:waypoint x="350" y="410" />
+        <di:waypoint x="420" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03czt5m_di" bpmnElement="Flow_03czt5m">
+        <di:waypoint x="520" y="410" />
+        <di:waypoint x="595" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1n2blke_di" bpmnElement="Flow_1n2blke">
+        <di:waypoint x="645" y="410" />
+        <di:waypoint x="880" y="410" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="721" y="392" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ra769j_di" bpmnElement="Flow_0ra769j">
+        <di:waypoint x="620" y="435" />
+        <di:waypoint x="620" y="600" />
+        <di:waypoint x="430" y="600" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="595" y="515" width="80" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
