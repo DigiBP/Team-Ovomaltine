@@ -39,6 +39,15 @@ Deepnote link: https://deepnote.com/workspace/l04-7d15acad-6de9-4091-891f-efd145
 
 Github: https://github.com/DigiBP/Team-Ovomaltine
 
+## Running the process 
+To run the process:
+1. Run the Deepnote Notebook
+2. Open the BPMN diagram via Camunda Modeler: BPMN_Diagram_Improvement.bpmn
+3. Deploy the model in Camunda
+4. Open Camunda Cockpit and navigate to start a new process: SpecimenJourney_experiment
+5. Run through all of the step of Camunda Tasks
+
+
 ## Tools
 
 - Deepnote
