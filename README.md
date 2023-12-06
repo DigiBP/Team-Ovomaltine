@@ -2,10 +2,13 @@
 
 ## Team members
 
-Saengrawi Gogniat
-Sunita Vijay Shelke
-Divya Sarah Abraham
-Aleksandra Iskrzynska
+Saengrawi Gogniat,
+
+Sunita Vijay Shelke,
+
+Divya Sarah Abraham,
+
+Aleksandra Iskrzynska.
 
 ## Histopathology department for breast cancer specimen analysis
 
@@ -35,6 +38,16 @@ This project focuses on transforming the analysis process within the pathology d
 Deepnote link: https://deepnote.com/workspace/l04-7d15acad-6de9-4091-891f-efd145100106/project/OlaAPI-69eb62be-3c1b-49e2-ac1f-d13d4e0bc6d3/notebook/Own%20API%20(Flask)-0fe27415a1ac4ffca2033f4b1f891436#0a4b4afdab044098a22e78ef8fae926a
 
 Github: https://github.com/DigiBP/Team-Ovomaltine
+
+## Running the process 
+Warning: for demo purposes the process can be run for the specimen_IDs from 1 to 20. This restriction is connected to the images of the histopathology slides that are available. 
+To run the process:
+1. Run the Deepnote Notebook
+2. Open the BPMN diagram via Camunda Modeler: BPMN_Diagram_Improvement.bpmn
+3. Deploy the model in Camunda
+4. Open Camunda Cockpit and navigate to start a new process: SpecimenJourney_experiment
+5. Run through all of the steps of Camunda Tasks
+
 
 ## Tools
 
