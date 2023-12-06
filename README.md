@@ -33,6 +33,12 @@ This project focuses on transforming the analysis process within the pathology d
 - Programming language: Python
 - Camunda Modeler Platform 7
 
+## AS-IS process
+<img width="644" alt="image" src="https://github.com/DigiBP/Team-Ovomaltine/assets/147037783/58646fe6-7352-4718-9cb0-690e0945b582">
+
+## TO-BE process
+<img width="860" alt="image" src="https://github.com/DigiBP/Team-Ovomaltine/assets/147037783/d50e272a-cf79-4a01-a9bc-29088136b613">
+
 ## Access to prototypes
 
 Deepnote link: https://deepnote.com/workspace/l04-7d15acad-6de9-4091-891f-efd145100106/project/OlaAPI-69eb62be-3c1b-49e2-ac1f-d13d4e0bc6d3/notebook/Own%20API%20(Flask)-0fe27415a1ac4ffca2033f4b1f891436#0a4b4afdab044098a22e78ef8fae926a
