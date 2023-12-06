@@ -40,6 +40,7 @@ Deepnote link: https://deepnote.com/workspace/l04-7d15acad-6de9-4091-891f-efd145
 Github: https://github.com/DigiBP/Team-Ovomaltine
 
 ## Running the process 
+Warning: for demo purposes the process can be run for the specimen_IDs from 1 to 20. This restriction is connected to the images of the histopathology slides that are available. 
 To run the process:
 1. Run the Deepnote Notebook
 2. Open the BPMN diagram via Camunda Modeler: BPMN_Diagram_Improvement.bpmn
