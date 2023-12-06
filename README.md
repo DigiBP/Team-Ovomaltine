@@ -45,7 +45,7 @@ To run the process:
 2. Open the BPMN diagram via Camunda Modeler: BPMN_Diagram_Improvement.bpmn
 3. Deploy the model in Camunda
 4. Open Camunda Cockpit and navigate to start a new process: SpecimenJourney_experiment
-5. Run through all of the step of Camunda Tasks
+5. Run through all of the steps of Camunda Tasks
 
 
 ## Tools
