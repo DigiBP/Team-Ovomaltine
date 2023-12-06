@@ -64,4 +64,4 @@ To run the process:
 
 ## Technical Requirements
 
-All required packages for Deepnote can be found in requirements.txt file in this repository.
+All required packages for Deepnote can be found in 03_Scripts/01_Deepnote/requirements.txt file in this repository.
