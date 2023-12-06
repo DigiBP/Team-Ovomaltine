@@ -1,5 +1,5 @@
 # Team-Ovomaltine
-
+HS 2023 Presentation: 07/12/2023
 ## Team members
 
 Saengrawi Gogniat,
@@ -9,6 +9,10 @@ Sunita Vijay Shelke,
 Divya Sarah Abraham,
 
 Aleksandra Iskrzynska.
+
+## Coaches
+Andreas Martin
+Charuta Pande
 
 ## Histopathology department for breast cancer specimen analysis
 
