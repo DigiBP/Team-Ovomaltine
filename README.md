@@ -65,3 +65,20 @@ To run the process:
 ## Technical Requirements
 
 All required packages for Deepnote can be found in 03_Scripts/01_Deepnote/requirements.txt file in this repository.
+
+## Conclusion
+Through the integration of advanced technology such as the Artidis AFM device and automated image analysis, significant strides have been made in reducing the overall time required for breast biopsy analysis. Initial results indicate a notable decrease in the time taken from biopsy collection to the final diagnostic report. Despite the incorporation of a new biomarker, the comprehensive approach has expedited the analysis process, enhancing efficiency without compromising accuracy.
+
+Potential for Future Advancements
+Integrating the Artidis technology marks a pivotal step toward enhancing our diagnostic capabilities. While the incorporation of a new biomarker initially influenced the analysis time, the groundwork laid by introducing this technology opens doors for further advancements. In the future, leveraging the Artidis device may pave the way for additional, rapid diagnostic methods for breast cancer assessment. The potential for an expedited and comprehensive diagnosis process remains a promising prospect, aiming to further streamline and optimize the pathology department's workflow.
+
+## References
+
+Dataset source: https://web.inf.ufpr.br/vri/databases/breast-cancer-histopathological-database-breakhis/ 
+
+[1] Spanhol, F., Oliveira, L. S., Petitjean, C., Heutte, L., A Dataset for Breast Cancer Histopathological Image Classification, IEEE Transactions on Biomedical Engineering (TBME), 63(7):1455-1462, 2016
+
+Plodinec, M., Loparic, M., Monnier, C. et al. The nanomechanical signature of breast cancer. Nature Nanotech 7, 757–765 (2012). https://doi.org/10.1038/nnano.2012.167
+
+
+
