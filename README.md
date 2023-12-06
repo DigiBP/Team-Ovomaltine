@@ -2,13 +2,13 @@
 
 ## Team members
 
-Saengrawi Gogniat
+Saengrawi Gogniat,
 
-Sunita Vijay Shelke
+Sunita Vijay Shelke,
 
-Divya Sarah Abraham
+Divya Sarah Abraham,
 
-Aleksandra Iskrzynska
+Aleksandra Iskrzynska.
 
 ## Histopathology department for breast cancer specimen analysis
 
