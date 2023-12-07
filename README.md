@@ -46,6 +46,7 @@ This project focuses on transforming the analysis process within the pathology d
 ## Access to prototypes
 
 Presentation: https://fhnw365-my.sharepoint.com/:p:/r/personal/saengrawi_gogniat_students_fhnw_ch/Documents/DGBP%20project.pptx?d=w6861d6cce5534e1da8f91e9b73d6cb6a&csf=1&web=1&e=YKRNMv
+
 Deepnote link: https://deepnote.com/workspace/l04-7d15acad-6de9-4091-891f-efd145100106/project/OlaAPI-69eb62be-3c1b-49e2-ac1f-d13d4e0bc6d3/notebook/Own%20API%20(Flask)-0fe27415a1ac4ffca2033f4b1f891436#0a4b4afdab044098a22e78ef8fae926a
 
 Github: https://github.com/DigiBP/Team-Ovomaltine
